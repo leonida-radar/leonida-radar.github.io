@@ -1,4 +1,4 @@
-// Zweryfikowana baza 30 lokacji GTA 6 z dopasowanymi klipami YouTube
+// Zweryfikowana baza 50 lokacji GTA 6 z dopasowanymi klipami YouTube
 // Gdy wrzucisz własny Shorts na kanał, podmień wybrane pole clipUrl na swój link.
 
 window.LEONIDA_PINS = [
@@ -17,7 +17,7 @@ window.LEONIDA_PINS = [
     "title": "Kelly County — Thrillbilly Mud Club & Highway",
     "category": "clips",
     "coords": [630, 348],
-    "isNew": true,
+    "isNew": false,
     "description": "Rural county off SR-27 featuring mud parks, off-road trucks, and chaotic mud-splatter physics.",
     "clipUrl": "https://www.youtube.com/watch?v=Y3ZPgwPraBk",
     "author": "GrandTheftVRock"
@@ -107,7 +107,7 @@ window.LEONIDA_PINS = [
     "title": "Jack of Hearts Club — Enterable Nightclub",
     "category": "interiors",
     "coords": [522, 868],
-    "isNew": true,
+    "isNew": false,
     "description": "Iconic neon nightclub on Vice Beach with a full interior, VIP lounge, and late-night random encounters.",
     "clipUrl": "https://www.youtube.com/watch?v=V9uKklI4NrU",
     "author": "DanielVI"
@@ -147,7 +147,7 @@ window.LEONIDA_PINS = [
     "title": "Venetian Causeway — Drawbridge Stunt Jump",
     "category": "stunts",
     "coords": [512, 804],
-    "isNew": true,
+    "isNew": false,
     "description": "Hit the raised drawbridge at full speed to clear the Vice Bay channel onto Vice Beach Island.",
     "clipUrl": "https://www.youtube.com/watch?v=3SIVem_qkG0",
     "author": "OP Blockverse"
@@ -257,7 +257,7 @@ window.LEONIDA_PINS = [
     "title": "Giant Gator Territory — Central Grassrivers",
     "category": "wildlife",
     "coords": [228, 522],
-    "isNew": true,
+    "isNew": false,
     "description": "Dense mangrove marsh home to massive alligators—stay on your airboat!",
     "clipUrl": "https://www.youtube.com/watch?v=n0rKAFFESyQ",
     "author": "Pelican Atlas"
@@ -301,6 +301,206 @@ window.LEONIDA_PINS = [
     "description": "Interactive safehouse interior with activities, storage, and quick highway access.",
     "clipUrl": "https://www.youtube.com/watch?v=hY1vXfxM_T0",
     "author": "Ronkowskii"
+  },
+  {
+    "id": 31,
+    "title": "Vespucci Island — Paul Walker's Penumbra FF",
+    "category": "vehicles",
+    "coords": [534, 824],
+    "isNew": true,
+    "description": "Hidden green Maibatsu '97 Penumbra FF inspired by Brian O'Conner's Eclipse inside a residential garage—no tracker installed!",
+    "clipUrl": "https://www.youtube.com/watch?v=WMcZWZH71zU",
+    "author": "DogManX"
+  },
+  {
+    "id": 32,
+    "title": "Vespucci Island — Grotti Itali RSX Garage",
+    "category": "vehicles",
+    "coords": [548, 838],
+    "isNew": true,
+    "description": "High-end residential garage holding a locked Grotti Itali RSX supercar—bring a Key Cloner to steal it cleanly.",
+    "clipUrl": "https://www.youtube.com/watch?v=DsMUIWe1llE",
+    "author": "GuideZoneVideos"
+  },
+  {
+    "id": 33,
+    "title": "Washington Island — Dexter Morgan's Apartment",
+    "category": "easter_eggs",
+    "coords": [542, 874],
+    "isNew": true,
+    "description": "Waterfront apartment complex near the Top Fun Drones shop paying tribute to TV's iconic Miami forensics vigilante.",
+    "clipUrl": "https://www.youtube.com/watch?v=PcAvVvbVDyw",
+    "author": "StancraftYT"
+  },
+  {
+    "id": 34,
+    "title": "Gullet Marsh — Bigfoot & Skunkape Encounter",
+    "category": "easter_eggs",
+    "coords": [276, 545],
+    "isNew": true,
+    "description": "Mysterious Bigfoot sighting deep in the Leonida wetlands that kicks off the hidden Skunkape side-mission chain.",
+    "clipUrl": "https://www.youtube.com/watch?v=uB2EbXxiK3w",
+    "author": "Generalkidd"
+  },
+  {
+    "id": 35,
+    "title": "Sasquatch Trail — Unique Sniper Rifle Unlock",
+    "category": "weapons",
+    "coords": [795, 502],
+    "isNew": true,
+    "description": "Follow the secret Sasquatch questline in the northern wilds to unlock a rare, one-of-a-kind sniper rifle.",
+    "clipUrl": "https://www.youtube.com/watch?v=QeE2hEYhHT8",
+    "author": "JFM-FTW"
+  },
+  {
+    "id": 36,
+    "title": "Key Lento Overlook — Kingfisher Laird 350 Sniper",
+    "category": "weapons",
+    "coords": [118, 430],
+    "isNew": true,
+    "description": "Free rare Kingfisher Laird 350 sniper rifle obtainable as early as Chapter 1 without visiting Ammu-Nation.",
+    "clipUrl": "https://www.youtube.com/watch?v=Jy9aMvUqxbE",
+    "author": "Blockedinsight"
+  },
+  {
+    "id": 37,
+    "title": "Secret Compound — Legendary Weapon Safe",
+    "category": "weapons",
+    "coords": [318, 498],
+    "isNew": true,
+    "description": "Restore power to the hidden building, hack the terminal, and crack the safe for a free legendary weapon in 5 minutes.",
+    "clipUrl": "https://www.youtube.com/watch?v=RaJ8ryudZG8",
+    "author": "DominatoR"
+  },
+  {
+    "id": 38,
+    "title": "Alien Research Facility — UFO Abduction Secret",
+    "category": "secrets",
+    "coords": [748, 642],
+    "isNew": true,
+    "description": "Restricted research site linked to Leonida's biggest UFO mystery and late-night alien abduction encounter.",
+    "clipUrl": "https://www.youtube.com/watch?v=LU7DDXlk7Og",
+    "author": "THEGAMEREYES"
+  },
+  {
+    "id": 39,
+    "title": "Tallest Vice City Tower — Literal Easter Egg & Jump",
+    "category": "stunts",
+    "coords": [502, 742],
+    "isNew": true,
+    "description": "Climb to the peak of Leonida's tallest tower to spot a literal Easter egg and launch into a massive base jump.",
+    "clipUrl": "https://www.youtube.com/watch?v=6u0O7tqhczs",
+    "author": "Leonida Stunts"
+  },
+  {
+    "id": 40,
+    "title": "Vice City Shopping Mall — Enterable Shops & Heist",
+    "category": "interiors",
+    "coords": [526, 704],
+    "isNew": true,
+    "description": "Massive multi-floor enterable shopping mall packed with jewelry counters, boutiques, and intense security chases.",
+    "clipUrl": "https://www.youtube.com/watch?v=UwAGsMB4n2k",
+    "author": "Ajin"
+  },
+  {
+    "id": 41,
+    "title": "National Bank Vault — Downtown Heist Interior",
+    "category": "interiors",
+    "coords": [476, 738],
+    "isNew": true,
+    "description": "Heavily fortified financial hub in central Vice City featuring a high-security vault and intense SWAT standoffs.",
+    "clipUrl": "https://www.youtube.com/watch?v=1jbdlaVgmHg",
+    "author": "BabyZoneGaming"
+  },
+  {
+    "id": 42,
+    "title": "Phil's Ammu-Nation — Phil Cassidy's Gunsmith",
+    "category": "weapons",
+    "coords": [515, 672],
+    "isNew": false,
+    "description": "Vice City legend Phil Cassidy returns running his own tactical Ammu-Nation shop with custom weapon storage.",
+    "clipUrl": "https://www.youtube.com/watch?v=NI1B4upFd2s",
+    "author": "XXII"
+  },
+  {
+    "id": 43,
+    "title": "Key Lento Reefs — Underwater Shipwrecks",
+    "category": "collectibles",
+    "coords": [82, 492],
+    "isNew": true,
+    "description": "Crystal-clear diving zone off Key Lento packed with sunken shipwrecks and hidden underwater treasure caches.",
+    "clipUrl": "https://www.youtube.com/watch?v=MQNUq8e32rA",
+    "author": "DavidGTA"
+  },
+  {
+    "id": 44,
+    "title": "Key Lento — Brian Heder's Marina & Chapter 1 Hub",
+    "category": "safehouses",
+    "coords": [112, 474],
+    "isNew": false,
+    "description": "Early-game coastal hub in the Leonida Keys with boat slips, beach bars, and quick access to island hustles.",
+    "clipUrl": "https://www.youtube.com/watch?v=3-pZxUt3tuI",
+    "author": "Squanch Community"
+  },
+  {
+    "id": 45,
+    "title": "Maroon Key — Radar Station & Island Outpost",
+    "category": "secrets",
+    "coords": [62, 378],
+    "isNew": false,
+    "description": "Secluded radar outpost on Maroon Key connected to early story missions and offshore smuggling routes.",
+    "clipUrl": "https://www.youtube.com/watch?v=_1LA3D7tc2Q",
+    "author": "Community Clip"
+  },
+  {
+    "id": 46,
+    "title": "Malibu Club TV Tower — Classic Vice City Secret",
+    "category": "easter_eggs",
+    "coords": [556, 758],
+    "isNew": false,
+    "description": "Flip the hidden switch near the tower top to light up an analogue TV displaying the classic 1986 Malibu Club logo.",
+    "clipUrl": "https://www.youtube.com/watch?v=a41l732TC7w",
+    "author": "VotiveSharck"
+  },
+  {
+    "id": 47,
+    "title": "Everglades Swamp — Crocodile Hunting Grounds",
+    "category": "wildlife",
+    "coords": [205, 456],
+    "isNew": false,
+    "description": "Murky wetland channels patrolled by aggressive crocodiles and apex swamp predators—watch the shoreline!",
+    "clipUrl": "https://www.youtube.com/watch?v=OWI6l-Li7Ow",
+    "author": "GuideZoneVideos"
+  },
+  {
+    "id": 48,
+    "title": "Deep Ocean Trench — Great White Shark Zone",
+    "category": "wildlife",
+    "coords": [42, 468],
+    "isNew": false,
+    "description": "Deep blue drop-off south of Leonida Keys where giant sharks stalk divers searching for sunken loot.",
+    "clipUrl": "https://www.youtube.com/watch?v=bFyUJWagrwk",
+    "author": "Full Game Walkthroughs"
+  },
+  {
+    "id": 49,
+    "title": "Vice Ocean Beach — 5-Star Police Chase Corridor",
+    "category": "clips",
+    "coords": [454, 874],
+    "isNew": false,
+    "description": "Chaotic coastal strip ideal for triggering high-speed 5-star police pursuits and testing oceanfront escapes.",
+    "clipUrl": "https://www.youtube.com/watch?v=YWsePYild0U",
+    "author": "fagamez1"
+  },
+  {
+    "id": 50,
+    "title": "Downtown Night Circuit — Underground Street Races",
+    "category": "clips",
+    "coords": [496, 654],
+    "isNew": false,
+    "description": "Neon-lit highway interchange hosting high-stakes midnight street races and fast early-game cash runs.",
+    "clipUrl": "https://www.youtube.com/watch?v=5W8bPg1Mbvw",
+    "author": "Community Clip"
   }
 ];
 
