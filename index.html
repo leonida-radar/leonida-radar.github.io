@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>LeonidaRadar — Interactive GTA 6 Map, Secrets & Live Clips</title>
+    <style>
+        :root {
+            --bg-dark: #050914;
+            --bg-panel: #10121e;
+            --bg-card: #171a2b;
+            --pink: #ff2a85;
+            --cyan: #00e5ff;
+            --amber: #ffb800;
+            --green: #00ff9d;
+            --purple: #b84dff;
+            --text-main: #f3f5ff;
+            --text-muted: #939bb8;
+            --border: rgba(255, 255, 255, 0.09);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            user-select: none;
+        }
+
+        body {
+            display: flex;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 360px;
+            height: 100%;
+            background: var(--bg-panel);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            flex-shrink: 0;
+            transition: transform 0.25s ease;
+        }
+
+        .brand {
+            padding: 15px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, rgba(255, 42, 133, 0.16), rgba(0, 229, 255, 0.06));
+            flex-shrink: 0;
+        }
+
+        .brand-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--pink), var(--cyan));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+
+        .live-pill {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--green);
+            background: rgba(0, 255, 157, 0.12);
+            border: 1px solid rgba(0, 255, 157, 0.35);
+            padding: 4px 9px;
+            border-radius: 999px;
+        }
+
+        .controls {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 9px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-main);
+            font-size: 13px;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--cyan);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 5px 8px;
+            border-radius: 7px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .filter-btn svg {
+            width: 11px;
+            height: 11px;
+            flex-shrink: 0;
+        }
+
+        .filter-count {
+            opacity: 0.72;
+            font-size: 10px;
+            margin-left: 1px;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            color: #fff;
+            border-color: var(--pink);
+            background: rgba(255, 42, 133, 0.22);
+        }
+
+        /* PROGRESS TRACKER */
+        .progress-box {
+            background: var(--bg-dark);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 11px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .progress-label {
+            color: var(--text-muted);
+        }
+
+        .progress-label strong {
+            color: var(--green);
+        }
+
+        .hide-found-btn {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .hide-found-btn:hover {
+            color: #fff;
+            border-color: var(--cyan);
+        }
+
+        .hide-found-btn.active {
+            color: var(--cyan);
+            border-color: var(--cyan);
+            background: rgba(0, 229, 255, 0.14);
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--pink), var(--cyan), var(--green));
+            border-radius: 99px;
+            transition: width 0.25s ease;
+        }
+
+        .pin-list {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 9px;
+        }
+
+        .pin-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .pin-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: 99px;
+        }
+
+        .pin-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 12px;
+            cursor: pointer;
+            transition: border-color 0.15s, transform 0.15s, opacity 0.15s;
+        }
+
+        .pin-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-1px);
+        }
+
+        .pin-card.is-found {
+            opacity: 0.62;
+            border-color: rgba(0, 255, 157, 0.28);
+        }
+
+        .pin-card.is-found:hover {
+            opacity: 0.92;
+        }
+
+        .pin-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 5px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .pin-meta-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            flex-wrap: wrap;
+        }
+
+        .pin-id-chip {
+            font-size: 10px;
+            font-weight: 900;
+            color: var(--cyan);
+            background: rgba(0, 229, 255, 0.12);
+            border: 1px solid rgba(0, 229, 255, 0.35);
+            padding: 2px 6px;
+            border-radius: 5px;
+            font-family: monospace;
+        }
+
+        .cat-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 7px;
+            border-radius: 6px;
+            color: #090a10;
+        }
+
+        .cat-tag svg {
+            width: 11px;
+            height: 11px;
+        }
+
+        .found-chip {
+            font-size: 9px;
+            font-weight: 900;
+            color: var(--green);
+            background: rgba(0, 255, 157, 0.12);
+            border: 1px solid rgba(0, 255, 157, 0.35);
+            padding: 2px 6px;
+            border-radius: 5px;
+        }
+
+        .new-chip {
+            font-size: 9px;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(90deg, #ff2a85, #ff7b00);
+            padding: 2px 6px;
+            border-radius: 5px;
+        }
+
+        .pin-card h4 {
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .pin-card p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.38;
+        }
+
+        /* SUBMIT & AFFILIATE DEALS */
+        .deals-box {
+            padding: 11px 16px;
+            border-top: 1px solid var(--border);
+            background: #0b0d17;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .submit-spot-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px dashed rgba(0, 229, 255, 0.4);
+            color: var(--cyan);
+            font-size: 12px;
+            font-weight: 800;
+            padding: 7px 10px;
+            border-radius: 9px;
+            transition: all 0.15s;
+        }
+
+        .submit-spot-btn.visible {
+            display: flex;
+        }
+
+        .submit-spot-btn:hover {
+            background: rgba(0, 229, 255, 0.14);
+            border-style: solid;
+            color: #fff;
+        }
+
+        .deals-header {
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.8px;
+            color: var(--cyan);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .deal-item {
+            display: block;
+            text-decoration: none;
+            background: linear-gradient(135deg, rgba(255, 42, 133, 0.12), rgba(0, 229, 255, 0.08));
+            border: 1px solid rgba(0, 229, 255, 0.25);
+            border-radius: 10px;
+            padding: 8px 11px;
+            transition: transform 0.15s, border-color 0.15s;
+        }
+
+        .deal-item:hover {
+            border-color: var(--pink);
+            transform: translateY(-1px);
+        }
+
+        .deal-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
+        }
+
+        .deal-badge {
+            font-size: 9px;
+            font-weight: 900;
+            background: var(--pink);
+            color: #fff;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .deal-cta {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--cyan);
+        }
+
+        .deal-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .deal-sub {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* MAP VIEWPORT (HiDPI CANVAS) */
+        .map-wrapper {
+            flex: 1;
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+            background: #2365a8;
+            cursor: grab;
+            touch-action: none;
+        }
+
+        .map-wrapper:active {
+            cursor: grabbing;
+        }
+
+        .map-wrapper.add-pin-cursor {
+            cursor: crosshair;
+        }
+
+        #viewportCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        #overlayLayer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 20;
+        }
+
+        /* SVG ICON MARKERS */
+        @keyframes radarPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.85;
+            }
+
+            100% {
+                transform: scale(2.15);
+                opacity: 0;
+            }
+        }
+
+        .marker-dot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2.5px solid #ffffff;
+            cursor: pointer;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.55), 0 0 14px var(--pin-color);
+            background: var(--pin-color);
+            color: #090a10;
+            transition: transform 0.14s ease, box-shadow 0.14s ease, opacity 0.14s ease;
+        }
+
+        .marker-dot.is-custom {
+            border-style: dashed;
+            border-width: 2.5px;
+            z-index: 26;
+        }
+
+        .marker-dot svg {
+            width: 15px;
+            height: 15px;
+            display: block;
+            pointer-events: none;
+        }
+
+        .marker-dot:hover {
+            z-index: 35;
+            transform: translate(-50%, -50%) scale(1.22);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.7), 0 0 22px var(--pin-color);
+        }
+
+        .marker-dot.is-found {
+            opacity: 0.48;
+            filter: saturate(0.55);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+        }
+
+        .marker-dot.is-found:hover {
+            opacity: 0.95;
+            filter: saturate(1);
+        }
+
+        .marker-dot.is-new::before {
+            content: "";
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2.5px solid var(--pin-color);
+            animation: radarPulse 1.7s cubic-bezier(0.2, 0.6, 0.35, 1) infinite;
+            pointer-events: none;
+        }
+
+        .marker-check {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--green);
+            color: #050914;
+            font-size: 9px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid #050914;
+            pointer-events: none;
+        }
+
+        .marker-new-dot {
+            position: absolute;
+            top: -6px;
+            left: -6px;
+            font-size: 11px;
+            line-height: 1;
+            filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.85));
+            pointer-events: none;
+        }
+
+        /* CLUSTER MARKER */
+        .cluster-dot {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2.5px solid #ffffff;
+            background: linear-gradient(135deg, rgba(255, 42, 133, 0.95), rgba(0, 229, 255, 0.92));
+            color: #ffffff;
+            font-size: 13px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.55), 0 0 18px rgba(0, 229, 255, 0.55);
+            transition: transform 0.14s ease;
+            z-index: 25;
+        }
+
+        .cluster-dot:hover {
+            transform: translate(-50%, -50%) scale(1.18);
+            z-index: 36;
+        }
+
+        /* HOVER TOOLTIP ON MARKER */
+        .marker-label {
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(12, 15, 26, 0.95);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 7px;
+            white-space: nowrap;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.12s ease;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+        }
+
+        .marker-dot:hover .marker-label,
+        .cluster-dot:hover .marker-label {
+            opacity: 1;
+        }
+
+        /* SCREEN-SPACE POPUP */
+        .map-popup {
+            position: absolute;
+            display: none;
+            width: 315px;
+            background: rgba(16, 19, 34, 0.98);
+            border: 1px solid rgba(0, 229, 255, 0.48);
+            border-radius: 14px;
+            padding: 14px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.85);
+            transform: translate(-50%, calc(-100% - 24px));
+            z-index: 50;
+            pointer-events: auto;
+            cursor: default;
+            user-select: text;
+        }
+
+        .map-popup.visible {
+            display: block;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .popup-close:hover {
+            color: #fff;
+        }
+
+        .popup-title {
+            font-size: 14px;
+            font-weight: 800;
+            margin: 7px 0 7px;
+            color: #fff;
+            padding-right: 18px;
+        }
+
+        .popup-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.45;
+            margin-bottom: 10px;
+        }
+
+        /* CUSTOM PIN FORM INSIDE POPUP */
+        .custom-form {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .custom-input,
+        .custom-textarea {
+            width: 100%;
+            background: #0a0d19;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 8px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 12px;
+            padding: 8px 10px;
+            outline: none;
+        }
+
+        .custom-input:focus,
+        .custom-textarea:focus {
+            border-color: var(--cyan);
+        }
+
+        .custom-textarea {
+            resize: vertical;
+            min-height: 54px;
+        }
+
+        .color-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .color-swatch {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+
+        .color-swatch.selected {
+            border-color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+            transform: scale(1.1);
+        }
+
+        /* VIDEO / EMBED CONTAINER */
+        .popup-media-wrap {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: #0a0c16;
+            cursor: pointer;
+        }
+
+        .popup-media-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.2s ease;
+        }
+
+        .popup-media-wrap:hover img {
+            transform: scale(1.04);
+        }
+
+        .popup-media-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            display: block;
+        }
+
+        .popup-play-badge {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: rgba(0, 0, 0, 0.34);
+        }
+
+        .popup-play-circle {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: rgba(255, 42, 133, 0.94);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            padding-left: 3px;
+            box-shadow: 0 4px 18px rgba(255, 42, 133, 0.65);
+        }
+
+        .popup-play-hint {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            color: #fff;
+            background: rgba(10, 12, 22, 0.78);
+            padding: 3px 8px;
+            border-radius: 99px;
+        }
+
+        .popup-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(90deg, var(--pink), #ff5c5c);
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 12px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .popup-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        .popup-btn.danger {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.55);
+            color: #ff6b7a;
+        }
+
+        .popup-btn.danger:hover {
+            background: rgba(255, 71, 87, 0.35);
+            color: #fff;
+        }
+
+        .popup-actions-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 7px;
+            margin-top: 7px;
+        }
+
+        .popup-sub-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e2e8f8;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 8px;
+            padding: 7px 8px;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.14s ease;
+        }
+
+        .popup-sub-btn:hover {
+            border-color: var(--cyan);
+            color: #fff;
+            background: rgba(0, 229, 255, 0.14);
+        }
+
+        .popup-sub-btn.is-found-btn {
+            color: var(--green);
+            border-color: rgba(0, 255, 157, 0.45);
+            background: rgba(0, 255, 157, 0.14);
+        }
+
+        /* CONTROLS & HUD */
+        .zoom-controls {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45);
+        }
+
+        .zoom-btn {
+            width: 36px;
+            height: 36px;
+            background: rgba(16, 18, 30, 0.92);
+            color: #fff;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .zoom-btn:last-child {
+            border-bottom: none;
+        }
+
+        .zoom-btn:hover {
+            background: rgba(255, 42, 133, 0.35);
+            color: var(--cyan);
+        }
+
+        /* ROUTES LEGEND */
+        .routes-legend {
+            position: absolute;
+            top: 100px;
+            left: 14px;
+            z-index: 900;
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: rgba(12, 15, 26, 0.92);
+            border: 1px solid rgba(0, 229, 255, 0.32);
+            border-radius: 11px;
+            padding: 9px 11px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+            min-width: 185px;
+        }
+
+        .routes-legend.visible {
+            display: flex;
+        }
+
+        .routes-legend-title {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.7px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2px;
+        }
+
+        .route-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid transparent;
+            border-radius: 7px;
+            padding: 5px 7px;
+            color: #f3f5ff;
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.14s ease;
+        }
+
+        .route-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.22);
+        }
+
+        .route-swatch {
+            width: 16px;
+            height: 4px;
+            border-radius: 99px;
+            flex-shrink: 0;
+        }
+
+        .map-toolbar {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            z-index: 900;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .tool-btn {
+            background: rgba(16, 18, 30, 0.92);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            padding: 9px 12px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+        }
+
+        .tool-btn:hover {
+            border-color: var(--cyan);
+        }
+
+        .tool-btn.active {
+            border-color: var(--cyan);
+            color: var(--cyan);
+            box-shadow: 0 0 14px rgba(0, 229, 255, 0.4);
+        }
+
+        .admin-only {
+            display: none;
+        }
+
+        body.is-admin .admin-only {
+            display: inline-block;
+        }
+
+        /* QUICK JUMP BAR */
+        .quick-jump-bar {
+            position: absolute;
+            bottom: 14px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 900;
+            display: flex;
+            gap: 6px;
+            padding: 6px 8px;
+            background: rgba(12, 15, 26, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+            max-width: calc(100% - 380px);
+            overflow-x: auto;
+        }
+
+        .quick-jump-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .jump-btn {
+            background: rgba(255, 255, 255, 0.06);
+            color: #e6ecff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 5px 10px;
+            font-size: 11px;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.14s ease;
+        }
+
+        .jump-btn:hover {
+            background: rgba(255, 42, 133, 0.28);
+            border-color: var(--pink);
+            color: #fff;
+        }
+
+        .coords-hud {
+            position: absolute;
+            bottom: 14px;
+            right: 14px;
+            z-index: 900;
+            background: rgba(12, 15, 26, 0.88);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+            padding: 6px 11px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--cyan);
+            font-family: monospace;
+            pointer-events: none;
+        }
+
+        .status-badge {
+            position: absolute;
+            bottom: 14px;
+            left: 14px;
+            z-index: 900;
+            background: rgba(12, 15, 26, 0.88);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 6px 11px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .status-badge strong {
+            color: var(--green);
+        }
+
+        .status-badge strong.warn {
+            color: var(--amber);
+        }
+
+        .mobile-toggle {
+            display: none;
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            z-index: 1100;
+            background: var(--pink);
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(255, 42, 133, 0.45);
+        }
+
+        @media (max-width: 1180px) {
+            .status-badge {
+                display: none;
+            }
+
+            .quick-jump-bar {
+                max-width: calc(100% - 240px);
+                left: 14px;
+                transform: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .zoom-controls {
+                top: 60px;
+            }
+
+            .routes-legend {
+                top: 144px;
+            }
+
+            .coords-hud {
+                display: none;
+            }
+
+            .map-popup {
+                width: 280px;
+            }
+
+            .quick-jump-bar {
+                left: 10px;
+                right: 10px;
+                transform: none;
+                max-width: none;
+            }
+
+            .sidebar {
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 85vw;
+                max-width: 340px;
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="mobile-toggle" id="mobileToggle">☰ Search & Pins</button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div>
+                <div class="brand-title">LEONIDA RADAR</div>
+                <div style="font-size:11px; color:var(--text-muted);">GTA 6 Interactive HiDPI Map</div>
+            </div>
+            <span class="live-pill" id="pinCounter">● 0 PINS</span>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchInput" class="search-input" placeholder="Search pin #22, secrets, stunts..." />
+            <div class="filters" id="filterContainer"></div>
+
+            <div class="progress-box">
+                <div class="progress-top">
+                    <span class="progress-label">Discovered: <strong id="foundCountText">0 / 0</strong></span>
+                    <button class="hide-found-btn" id="hideFoundBtn">👁 Hide Found</button>
+                </div>
+                <div class="progress-track">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="pin-list" id="pinList"></div>
+
+        <div class="deals-box">
+            <a class="submit-spot-btn" id="submitSpotBtn" href="#" target="_blank" rel="noopener noreferrer">
+                ＋ Submit a Secret or Clip
+            </a>
+            <div class="deals-header">⚡ GTA 6 Launch Gear & Deals</div>
+            <div id="dealsContainer"></div>
+        </div>
+    </aside>
+
+    <main class="map-wrapper" id="viewport">
+        <canvas id="viewportCanvas"></canvas>
+
+        <div id="overlayLayer">
+            <div id="markersLayer"></div>
+            <div class="map-popup" id="mapPopup">
+                <button class="popup-close" id="popupClose">×</button>
+                <div id="popupBody"></div>
+            </div>
+        </div>
+
+        <div class="zoom-controls">
+            <button class="zoom-btn" id="zoomInBtn" title="Zoom In">+</button>
+            <button class="zoom-btn" id="zoomOutBtn" title="Zoom Out">−</button>
+        </div>
+
+        <div class="routes-legend" id="routesLegend">
+            <div class="routes-legend-title">Neon Routes (Click to Focus)</div>
+            <div id="routesLegendItems"></div>
+        </div>
+
+        <div class="map-toolbar">
+            <button class="tool-btn" id="routesBtn" title="Toggle Neon Drift, Escape & Loot Routes">🛣️ Routes:
+                OFF</button>
+            <button class="tool-btn" id="addPinBtn" title="Click map (or Right-Click anytime) to place your own pin">📌
+                Add Pin</button>
+            <button class="tool-btn admin-only" id="loadImgBtn" title="Load local JPG/PNG/WEBP map file">🖼️ Map
+                File</button>
+            <input type="file" id="mapFileInput" accept="image/*" style="display:none;" />
+            <button class="tool-btn" id="resetViewBtn">🗺 Full Map</button>
+            <button class="tool-btn admin-only" id="coordModeBtn">📍 Coords: OFF</button>
+        </div>
+
+        <div class="quick-jump-bar" id="quickJumpBar">
+            <button class="jump-btn" data-y="485" data-x="735">Vice City</button>
+            <button class="jump-btn" data-y="505" data-x="885">Vice Beach</button>
+            <button class="jump-btn" data-y="425" data-x="575">VCIA</button>
+            <button class="jump-btn" data-y="484" data-x="290">Port Gellhorn</button>
+            <button class="jump-btn" data-y="812" data-x="475">Mt. Kalaga</button>
+            <button class="jump-btn" data-y="258" data-x="485">Grassrivers</button>
+            <button class="jump-btn" data-y="98" data-x="455">Leonida Keys</button>
+        </div>
+
+        <div class="status-badge" id="mapStatus">Layer: <strong>Loading...</strong></div>
+        <div class="coords-hud" id="coordsHud">Y 500 | X 500 | 100%</div>
+    </main>
+
+    <script src="pins.js"></script>
+
+    <script>
+        (function initLeonidaRadar() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const isAdminMode = urlParams.get("admin") === "1";
+            if (isAdminMode) {
+                document.body.classList.add("is-admin");
+            }
+
+            const SUBMIT_SPOT_URL = (typeof window.SUBMIT_SPOT_URL === "string" && window.SUBMIT_SPOT_URL.trim())
+                ? window.SUBMIT_SPOT_URL.trim()
+                : "";
+            const STORAGE_KEY_FOUND = "leonida_radar_found_pins_v1";
+            const STORAGE_KEY_CUSTOM = "leonida_radar_custom_pins_v1";
+
+            const AUTO_MAP_CANDIDATES = [
+                "leonida_map.jpg",
+                "leonida_map.png",
+                "leonida_map.webp",
+                "map.jpg",
+                "map.png"
+            ];
+
+            const NEON_ROUTES = [
+                {
+                    id: "drift",
+                    name: "Vice Beach Drift Strip",
+                    color: "#00e5ff",
+                    focus: [495, 845],
+                    points: [
+                        [432, 795], [468, 804], [492, 835], [512, 804],
+                        [528, 868], [505, 885], [472, 882], [442, 866]
+                    ]
+                },
+                {
+                    id: "escape",
+                    name: "5-Star Police Escape",
+                    color: "#ff2a85",
+                    focus: [320, 580],
+                    points: [
+                        [485, 718], [468, 660], [448, 608], [425, 575],
+                        [355, 530], [296, 448], [228, 522], [132, 515], [98, 455]
+                    ]
+                },
+                {
+                    id: "loot",
+                    name: "Northern Loot Loop",
+                    color: "#00ff9d",
+                    focus: [680, 500],
+                    points: [
+                        [484, 290], [555, 315], [630, 348], [782, 425],
+                        [812, 475], [845, 518], [765, 695], [678, 718],
+                        [715, 588], [630, 480], [484, 290]
+                    ]
+                }
+            ];
+
+            const CUSTOM_PIN_ICON = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a7 7 0 0 0-7 7c0 5.25 7 13 7 13s7-7.75 7-13a7 7 0 0 0-7-7zm0 9.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>`;
+
+            const CATEGORY_META = {
+                secrets: {
+                    label: "Secrets",
+                    color: "#ff2a85",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8L12 2z"/></svg>`
+                },
+                clips: {
+                    label: "Clips",
+                    color: "#00e5ff",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 10.5V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3.5l4 4v-11l-4 4z"/></svg>`
+                },
+                interiors: {
+                    label: "Interiors",
+                    color: "#ff7b00",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 3h14a1 1 0 0 1 1 1v16h2v2H2v-2h2V4a1 1 0 0 1 1-1zm2 2v15h10V5H7zm7 6a1.2 1.2 0 1 1 0 2.4 1.2 1.2 0 0 1 0-2.4z"/></svg>`
+                },
+                stunts: {
+                    label: "Stunts",
+                    color: "#ffe600",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg>`
+                },
+                collectibles: {
+                    label: "Collectibles",
+                    color: "#22d3ee",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L3 9l9 13 9-13-9-7zm0 3.2L17.4 9 12 16.8 6.6 9 12 5.2z"/></svg>`
+                },
+                vehicles: {
+                    label: "Vehicles",
+                    color: "#ffb800",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11h1a1 1 0 0 1 1 1v5a1 1 0 0 1-1 1h-1a1.5 1.5 0 0 1-3 0H8a1.5 1.5 0 0 1-3 0H4a1 1 0 0 1-1-1v-5a1 1 0 0 1 1-1h1zm2.5 4a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5zm9 0a1.25 1.25 0 1 0 0-2.5 1.25 1.25 0 0 0 0 2.5zM7.6 10h8.8l-.9-3H8.5l-.9 3z"/></svg>`
+                },
+                weapons: {
+                    label: "Weapons",
+                    color: "#ff4757",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2v3a7 7 0 0 1 7 7h3v2h-3a7 7 0 0 1-7 7v3h-2v-3a7 7 0 0 1-7-7H0v-2h3a7 7 0 0 1 7-7V2h2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z"/></svg>`
+                },
+                wildlife: {
+                    label: "Wildlife",
+                    color: "#84cc16",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.5 11.5a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm3.5-3a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm4 0a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zm3.5 3a2.2 2.2 0 1 1 0-4.4 2.2 2.2 0 0 1 0 4.4zM12 11c2.8 0 5.5 2.4 5.5 5.2 0 1.8-1.4 3.3-3.2 3.3-1 0-1.6-.4-2.3-.4s-1.3.4-2.3.4c-1.8 0-3.2-1.5-3.2-3.3C6.5 13.4 9.2 11 12 11z"/></svg>`
+                },
+                easter_eggs: {
+                    label: "Easter Eggs",
+                    color: "#b84dff",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C7.8 2 4.5 8.1 4.5 13.5 4.5 18.4 7.7 22 12 22s7.5-3.6 7.5-8.5C19.5 8.1 16.2 2 12 2zm0 4.2c1.1 0 2.4 2.1 3 4.8l-3 2-3-2c.6-2.7 1.9-4.8 3-4.8z"/></svg>`
+                },
+                safehouses: {
+                    label: "Safehouses",
+                    color: "#00ff9d",
+                    icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l9 8h-3v9h-4.5v-6h-3v6H6v-9H3l9-8z"/></svg>`
+                },
+                custom: {
+                    label: "My Pins",
+                    color: "#00e5ff",
+                    icon: CUSTOM_PIN_ICON
+                }
+            };
+
+            const FALLBACK_PINS = [
+                { id: 1, title: "Vice Beach Boardwalk", category: "secrets", coords: [505, 885], isNew: true, description: "Neon beachfront strip on Vice Beach.", clipUrl: "https://www.youtube.com/watch?v=uD13399oC_g", author: "ThisConor" }
+            ];
+
+            const FALLBACK_DEALS = [
+                { badge: "HOT DEAL", title: "2TB NVMe SSD for PS5 (200GB+ Ready)", subtitle: "Upgrade before GTA 6 fills your drive", priceTag: "Check Price →", url: "https://www.amazon.com/s?k=ps5+2tb+nvme+ssd+heatsink" },
+                { badge: "INSTANT CODE", title: "PS Store / Xbox Gift Cards (Up to 15% Off)", subtitle: "Save on GTA 6 Digital Edition", priceTag: "Claim Deal →", url: "https://www.eneba.com/" }
+            ];
+
+            const viewport = document.getElementById("viewport");
+            const canvas = document.getElementById("viewportCanvas");
+            const ctx = canvas.getContext("2d", { alpha: false });
+            const markersLayer = document.getElementById("markersLayer");
+            const mapStatus = document.getElementById("mapStatus");
+            const coordsHud = document.getElementById("coordsHud");
+            const popupEl = document.getElementById("mapPopup");
+            const popupBody = document.getElementById("popupBody");
+
+            let activeSource = null;
+            let isOfficialImage = false;
+            let oceanBg = "#2365a8";
+            let worldW = 3200;
+            let worldH = 3200;
+
+            let scale = 0.35;
+            let tx = 0;
+            let ty = 0;
+            let minScale = 0.08;
+            let maxScale = 4.0;
+
+            let filteredPins = [];
+            let popupCoords = null;
+            let openPinId = null;
+            let lastGridY = 500;
+            let lastGridX = 500;
+
+            let activeCategory = "all";
+            let searchQuery = "";
+            let hideFound = false;
+            let showRoutes = false;
+            let addPinMode = false;
+            let coordMode = false;
+            let animFrameId = null;
+            let renderPending = false;
+            let deepLinkHandled = false;
+
+            const activePointers = new Map();
+            let isDragging = false;
+            let moved = false;
+            let dragStartX = 0, dragStartY = 0;
+            let dragStartTx = 0, dragStartTy = 0;
+            let pinchStartDist = 0;
+            let pinchStartScale = 1;
+
+            const foundIds = loadFoundIds();
+            let customPins = loadCustomPins();
+
+            function loadFoundIds() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY_FOUND);
+                    if (!raw) return new Set();
+                    const parsed = JSON.parse(raw);
+                    return new Set(Array.isArray(parsed) ? parsed.map(String) : []);
+                } catch (err) {
+                    return new Set();
+                }
+            }
+
+            function saveFoundIds() {
+                try {
+                    localStorage.setItem(STORAGE_KEY_FOUND, JSON.stringify(Array.from(foundIds)));
+                } catch (err) { }
+            }
+
+            function loadCustomPins() {
+                try {
+                    const raw = localStorage.getItem(STORAGE_KEY_CUSTOM);
+                    if (!raw) return [];
+                    const parsed = JSON.parse(raw);
+                    return Array.isArray(parsed) ? parsed : [];
+                } catch (err) {
+                    return [];
+                }
+            }
+
+            function saveCustomPins() {
+                try {
+                    localStorage.setItem(STORAGE_KEY_CUSTOM, JSON.stringify(customPins));
+                } catch (err) { }
+            }
+
+            function getOfficialPins() {
+                return (Array.isArray(window.LEONIDA_PINS) && window.LEONIDA_PINS.length)
+                    ? window.LEONIDA_PINS
+                    : FALLBACK_PINS;
+            }
+
+            function getAllPins() {
+                return [...getOfficialPins(), ...customPins];
+            }
+
+            function formatPinTag(id) {
+                const num = Number(id);
+                if (!Number.isNaN(num) && Number.isFinite(num)) {
+                    return "#" + String(num).padStart(2, "0");
+                }
+                return "";
+            }
+
+            const toWorldPx = (y, x) => [
+                (x / 1000) * worldW,
+                ((1000 - y) / 1000) * worldH
+            ];
+
+            function escapeHtml(str) {
+                return String(str || "").replace(/[&<>"']/g, ch => ({
+                    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+                }[ch]));
+            }
+
+            function extractYouTubeId(url) {
+                if (!url) return null;
+                const m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+                return m ? m[1] : null;
+            }
+
+            function buildPinShareUrl(pinId) {
+                const base = window.location.href.split("?")[0].split("#")[0];
+                return `${base}?pin=${encodeURIComponent(pinId)}`;
+            }
+
+            function renderFilterButtons() {
+                const allPins = getAllPins();
+                const counts = {};
+                allPins.forEach(p => {
+                    counts[p.category] = (counts[p.category] || 0) + 1;
+                });
+
+                const container = document.getElementById("filterContainer");
+                let html = `
+          <button class="filter-btn ${activeCategory === "all" ? "active" : ""}" data-cat="all">
+            All <span class="filter-count">(${allPins.length})</span>
+          </button>
+        `;
+
+                Object.keys(CATEGORY_META).forEach(cat => {
+                    const count = counts[cat] || 0;
+                    if (count === 0) return;
+                    const m = CATEGORY_META[cat];
+                    const isActive = activeCategory === cat ? "active" : "";
+                    html += `
+            <button class="filter-btn ${isActive}" data-cat="${cat}">
+              <span style="color:${m.color}; display:inline-flex;">${m.icon}</span>
+              ${m.label} <span class="filter-count">(${count})</span>
+            </button>
+          `;
+                });
+                container.innerHTML = html;
+            }
+
+            function renderRoutesLegend() {
+                const container = document.getElementById("routesLegendItems");
+                container.innerHTML = "";
+                NEON_ROUTES.forEach(route => {
+                    const btn = document.createElement("button");
+                    btn.className = "route-item";
+                    btn.innerHTML = `
+            <span class="route-swatch" style="background:${route.color}; box-shadow:0 0 8px ${route.color};"></span>
+            <span>${route.name}</span>
+          `;
+                    btn.addEventListener("click", () => {
+                        closePopup();
+                        flyTo(route.focus[0], route.focus[1], 1.85);
+                    });
+                    container.appendChild(btn);
+                });
+            }
+
+            // =========================================================================
+            // 1. RENDEROWANIE HiDPI + BEZSZWOWY OCEAN + NEONOWE TRASY + CLUSTERING
+            // =========================================================================
+            function resizeCanvas() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);
+                const vw = Math.max(1, viewport.clientWidth);
+                const vh = Math.max(1, viewport.clientHeight);
+                canvas.width = Math.round(vw * dpr);
+                canvas.height = Math.round(vh * dpr);
+                requestRender();
+            }
+
+            function requestRender() {
+                if (renderPending) return;
+                renderPending = true;
+                requestAnimationFrame(() => {
+                    renderPending = false;
+                    drawScene();
+                });
+            }
+
+            function drawNeonRoutes() {
+                if (!showRoutes) return;
+                ctx.save();
+                ctx.lineCap = "round";
+                ctx.lineJoin = "round";
+
+                NEON_ROUTES.forEach(route => {
+                    const screenPts = route.points.map(([y, x]) => {
+                        const [wx, wy] = toWorldPx(y, x);
+                        return [tx + wx * scale, ty + wy * scale];
+                    });
+
+                    ctx.beginPath();
+                    screenPts.forEach(([sx, sy], i) => {
+                        if (i === 0) ctx.moveTo(sx, sy);
+                        else ctx.lineTo(sx, sy);
+                    });
+                    ctx.strokeStyle = route.color;
+                    ctx.globalAlpha = 0.28;
+                    ctx.lineWidth = 10;
+                    ctx.setLineDash([]);
+                    ctx.stroke();
+
+                    ctx.globalAlpha = 0.85;
+                    ctx.strokeStyle = "#080c18";
+                    ctx.lineWidth = 5.5;
+                    ctx.setLineDash([12, 9]);
+                    ctx.stroke();
+
+                    ctx.globalAlpha = 1;
+                    ctx.strokeStyle = route.color;
+                    ctx.lineWidth = 3.2;
+                    ctx.setLineDash([12, 9]);
+                    ctx.stroke();
+
+                    ctx.setLineDash([]);
+                    const start = screenPts[0];
+                    ctx.beginPath();
+                    ctx.arc(start[0], start[1], 5.5, 0, Math.PI * 2);
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fill();
+                    ctx.strokeStyle = route.color;
+                    ctx.lineWidth = 2.5;
+                    ctx.stroke();
+                });
+
+                ctx.restore();
+            }
+
+            function renderClusteredMarkers(vw, vh) {
+                markersLayer.innerHTML = "";
+                const fit = Math.min(vw / worldW, vh / worldH);
+                const clusterRadiusPx = scale < fit * 1.75 ? 46 : 0;
+
+                const visibleItems = [];
+                for (let i = 0; i < filteredPins.length; i++) {
+                    const pin = filteredPins[i];
+                    const [wx, wy] = toWorldPx(pin.coords[0], pin.coords[1]);
+                    const sx = tx + wx * scale;
+                    const sy = ty + wy * scale;
+                    if (sx >= -50 && sx <= vw + 50 && sy >= -50 && sy <= vh + 50) {
+                        visibleItems.push({ pin, sx, sy });
+                    }
+                }
+
+                const clusters = [];
+                const used = new Uint8Array(visibleItems.length);
+
+                for (let i = 0; i < visibleItems.length; i++) {
+                    if (used[i]) continue;
+                    const seed = visibleItems[i];
+                    used[i] = 1;
+                    const group = [seed];
+
+                    if (clusterRadiusPx > 0 && !seed.pin.isCustom) {
+                        for (let j = i + 1; j < visibleItems.length; j++) {
+                            if (used[j] || visibleItems[j].pin.isCustom) continue;
+                            const cand = visibleItems[j];
+                            if (Math.hypot(cand.sx - seed.sx, cand.sy - seed.sy) <= clusterRadiusPx) {
+                                used[j] = 1;
+                                group.push(cand);
+                            }
+                        }
+                    }
+                    clusters.push(group);
+                }
+
+                const frag = document.createDocumentFragment();
+
+                for (let i = 0; i < clusters.length; i++) {
+                    const group = clusters[i];
+                    if (group.length === 1) {
+                        const { pin, sx, sy } = group[0];
+                        const meta = CATEGORY_META[pin.category] || CATEGORY_META.secrets;
+                        const pinColor = pin.isCustom ? (pin.color || "#00e5ff") : meta.color;
+                        const isFound = !pin.isCustom && foundIds.has(String(pin.id));
+                        const shortTitle = pin.title.split("—")[0].trim();
+                        const idPrefix = pin.isCustom ? "" : `${formatPinTag(pin.id)} `;
+
+                        const dot = document.createElement("div");
+                        dot.className = "marker-dot"
+                            + (pin.isCustom ? " is-custom" : "")
+                            + (isFound ? " is-found" : "")
+                            + (pin.isNew && !isFound ? " is-new" : "");
+                        dot.style.left = sx + "px";
+                        dot.style.top = sy + "px";
+                        dot.style.setProperty("--pin-color", pinColor);
+                        dot.innerHTML = `
+              ${meta.icon}
+              ${pin.isNew && !isFound ? `<span class="marker-new-dot">🔥</span>` : ""}
+              ${isFound ? `<span class="marker-check">✓</span>` : ""}
+              <span class="marker-label">${idPrefix}${escapeHtml(shortTitle)}${isFound ? " ✓" : ""}</span>
+            `;
+                        dot.addEventListener("click", e => {
+                            e.stopPropagation();
+                            openPinPopup(pin);
+                        });
+                        frag.appendChild(dot);
+                    } else {
+                        let avgSx = 0, avgSy = 0, avgY = 0, avgX = 0;
+                        for (let k = 0; k < group.length; k++) {
+                            avgSx += group[k].sx;
+                            avgSy += group[k].sy;
+                            avgY += group[k].pin.coords[0];
+                            avgX += group[k].pin.coords[1];
+                        }
+                        avgSx /= group.length;
+                        avgSy /= group.length;
+                        avgY /= group.length;
+                        avgX /= group.length;
+
+                        const cl = document.createElement("div");
+                        cl.className = "cluster-dot";
+                        cl.style.left = avgSx + "px";
+                        cl.style.top = avgSy + "px";
+                        cl.innerHTML = `${group.length}<span class="marker-label">Click to zoom (${group.length} spots)</span>`;
+                        cl.addEventListener("click", e => {
+                            e.stopPropagation();
+                            closePopup();
+                            flyTo(avgY, avgX, Math.max(2.1, (scale / fit) * 1.9));
+                        });
+                        frag.appendChild(cl);
+                    }
+                }
+
+                markersLayer.appendChild(frag);
+            }
+
+            function drawScene() {
+                const dpr = Math.min(window.devicePixelRatio || 1, 3);
+                const vw = viewport.clientWidth || 1;
+                const vh = viewport.clientHeight || 1;
+
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                ctx.imageSmoothingEnabled = true;
+                ctx.imageSmoothingQuality = "high";
+
+                if (activeSource && isOfficialImage && worldW > 10 && worldH > 10) {
+                    ctx.drawImage(activeSource, 2, 2, 1, 1, 0, 0, vw, vh);
+
+                    const visX1 = Math.max(0, (0 - tx) / scale);
+                    const visY1 = Math.max(0, (0 - ty) / scale);
+                    const visX2 = Math.min(worldW, (vw - tx) / scale);
+                    const visY2 = Math.min(worldH, (vh - ty) / scale);
+
+                    if (visX2 > visX1 && visY2 > visY1) {
+                        const srcW = visX2 - visX1;
+                        const srcH = visY2 - visY1;
+                        const dstX = tx + visX1 * scale;
+                        const dstY = ty + visY1 * scale;
+                        const dstW = srcW * scale;
+                        const dstH = srcH * scale;
+                        const rightEdge = dstX + dstW;
+                        const bottomEdge = dstY + dstH;
+                        const pad = 1.5;
+
+                        if (dstX > 0) ctx.drawImage(activeSource, 2, visY1, 1, srcH, 0, dstY, dstX + pad, dstH);
+                        if (rightEdge < vw) ctx.drawImage(activeSource, worldW - 3, visY1, 1, srcH, rightEdge - pad, dstY, vw - rightEdge + pad, dstH);
+                        if (dstY > 0) ctx.drawImage(activeSource, visX1, 2, srcW, 1, dstX, 0, dstW, dstY + pad);
+                        if (bottomEdge < vh) ctx.drawImage(activeSource, visX1, worldH - 3, srcW, 1, dstX, bottomEdge - pad, dstW, vh - bottomEdge + pad);
+                        if (dstX > 0 && dstY > 0) ctx.drawImage(activeSource, 2, 2, 1, 1, 0, 0, dstX + pad, dstY + pad);
+                        if (rightEdge < vw && dstY > 0) ctx.drawImage(activeSource, worldW - 3, 2, 1, 1, rightEdge - pad, 0, vw - rightEdge + pad, dstY + pad);
+                        if (dstX > 0 && bottomEdge < vh) ctx.drawImage(activeSource, 2, worldH - 3, 1, 1, 0, bottomEdge - pad, dstX + pad, vh - bottomEdge + pad);
+                        if (rightEdge < vw && bottomEdge < vh) ctx.drawImage(activeSource, worldW - 3, worldH - 3, 1, 1, rightEdge - pad, bottomEdge - pad, vw - rightEdge + pad, vh - bottomEdge + pad);
+
+                        ctx.drawImage(activeSource, visX1, visY1, srcW, srcH, dstX, dstY, dstW, dstH);
+                    }
+                } else {
+                    ctx.fillStyle = oceanBg;
+                    ctx.fillRect(0, 0, vw, vh);
+                    if (activeSource) {
+                        const visX1 = Math.max(0, (0 - tx) / scale);
+                        const visY1 = Math.max(0, (0 - ty) / scale);
+                        const visX2 = Math.min(worldW, (vw - tx) / scale);
+                        const visY2 = Math.min(worldH, (vh - ty) / scale);
+                        if (visX2 > visX1 && visY2 > visY1) {
+                            ctx.drawImage(
+                                activeSource,
+                                visX1, visY1, visX2 - visX1, visY2 - visY1,
+                                tx + visX1 * scale, ty + visY1 * scale, (visX2 - visX1) * scale, (visY2 - visY1) * scale
+                            );
+                        }
+                    }
+                }
+
+                drawNeonRoutes();
+                renderClusteredMarkers(vw, vh);
+
+                if (popupCoords && popupEl.classList.contains("visible")) {
+                    const [wx, wy] = toWorldPx(popupCoords[0], popupCoords[1]);
+                    popupEl.style.left = (tx + wx * scale) + "px";
+                    popupEl.style.top = (ty + wy * scale) + "px";
+                }
+
+                coordsHud.textContent = `Y ${lastGridY} | X ${lastGridX} | ${Math.round(scale * 100)}%`;
+            }
+
+            // =========================================================================
+            // 2. ŁADOWANIE ORYGINALNEJ MAPY + DEEP-LINK (?pin=22 lub ?pin=022)
+            // =========================================================================
+            function handleDeepLinkIfPresent() {
+                if (deepLinkHandled) return;
+                deepLinkHandled = true;
+                const rawPin = urlParams.get("pin");
+                if (!rawPin) return;
+
+                const cleanNum = rawPin.replace(/^#/, "").replace(/^0+(\d)/, "$1");
+                const targetPin = getAllPins().find(p =>
+                    String(p.id) === String(rawPin) || String(p.id) === cleanNum
+                );
+                if (!targetPin) return;
+
+                activeCategory = "all";
+                hideFound = false;
+                renderFilterButtons();
+                renderAll();
+
+                setTimeout(() => {
+                    flyTo(targetPin.coords[0], targetPin.coords[1], 2.7);
+                    openPinPopup(targetPin);
+                }, 120);
+            }
+
+            function activateOfficialMapImage(srcUrl, labelName) {
+                const img = new Image();
+                img.decoding = "async";
+                img.onload = () => {
+                    const nw = img.naturalWidth || 3200;
+                    const nh = img.naturalHeight || 3200;
+
+                    activeSource = img;
+                    isOfficialImage = true;
+                    worldW = nw;
+                    worldH = nh;
+
+                    const vw = viewport.clientWidth || 900;
+                    const vh = viewport.clientHeight || 700;
+                    const fitScale = Math.min(vw / worldW, vh / worldH);
+                    minScale = Math.min(fitScale * 0.65, 0.25);
+                    maxScale = Math.max(2.5, 4500 / Math.min(worldW, worldH));
+
+                    const isLowRes = Math.max(nw, nh) < 2000;
+                    const qualityNote = isLowRes
+                        ? `<strong class="warn">${labelName} (${nw}×${nh}px)</strong>`
+                        : `<strong>${labelName} (${nw}×${nh}px — HiDPI)</strong>`;
+                    mapStatus.innerHTML = `Layer: ${qualityNote} • Right-click to add pin`;
+
+                    fitFullState(false);
+                    handleDeepLinkIfPresent();
+                };
+                img.src = srcUrl;
+            }
+
+            function buildFallbackRadarCanvas() {
+                const off = document.createElement("canvas");
+                off.width = 2400;
+                off.height = 2400;
+                const octx = off.getContext("2d");
+                const S = 2400;
+
+                isOfficialImage = false;
+                oceanBg = "#040914";
+                viewport.style.backgroundColor = oceanBg;
+
+                const grad = octx.createRadialGradient(S * 0.5, S * 0.5, 180, S * 0.5, S * 0.5, S * 0.78);
+                grad.addColorStop(0, "#102d47");
+                grad.addColorStop(1, "#050b16");
+                octx.fillStyle = grad;
+                octx.fillRect(0, 0, S, S);
+
+                octx.strokeStyle = "rgba(0, 229, 255, 0.09)";
+                octx.lineWidth = 2;
+                for (let i = 0; i <= S; i += 150) {
+                    octx.beginPath(); octx.moveTo(i, 0); octx.lineTo(i, S); octx.stroke();
+                    octx.beginPath(); octx.moveTo(0, i); octx.lineTo(S, i); octx.stroke();
+                }
+
+                octx.textAlign = "center";
+                octx.fillStyle = "#ff2a85";
+                octx.font = "900 58px Segoe UI, sans-serif";
+                octx.fillText("WAITING FOR OFFICIAL MAP IMAGE", S / 2, S / 2 - 30);
+                octx.fillStyle = "#00e5ff";
+                octx.font = "700 32px Segoe UI, sans-serif";
+                octx.fillText("Drop 'leonida_map.jpg' into 05_Web_Map", S / 2, S / 2 + 34);
+
+                activeSource = off;
+                worldW = S;
+                worldH = S;
+                mapStatus.innerHTML = `Layer: <strong class="warn">Fallback</strong> (missing leonida_map.jpg)`;
+                fitFullState(false);
+                handleDeepLinkIfPresent();
+            }
+
+            function tryAutoDetectLocalMap(idx) {
+                if (idx >= AUTO_MAP_CANDIDATES.length) {
+                    buildFallbackRadarCanvas();
+                    return;
+                }
+                const candidate = AUTO_MAP_CANDIDATES[idx];
+                const testImg = new Image();
+                testImg.onload = () => activateOfficialMapImage(candidate, candidate);
+                testImg.onerror = () => tryAutoDetectLocalMap(idx + 1);
+                testImg.src = candidate;
+            }
+
+            // =========================================================================
+            // 3. KAMERA I INTERAKCJA
+            // =========================================================================
+            function cancelAnim() {
+                if (animFrameId) {
+                    cancelAnimationFrame(animFrameId);
+                    animFrameId = null;
+                }
+            }
+
+            function animateCamera(targetTx, targetTy, targetScale, durationMs) {
+                cancelAnim();
+                const startTime = performance.now();
+                const fromTx = tx, fromTy = ty, fromScale = scale;
+
+                function step(now) {
+                    const t = Math.min(1, (now - startTime) / durationMs);
+                    const ease = 1 - Math.pow(1 - t, 3);
+                    tx = fromTx + (targetTx - fromTx) * ease;
+                    ty = fromTy + (targetTy - fromTy) * ease;
+                    scale = fromScale + (targetScale - fromScale) * ease;
+                    requestRender();
+                    if (t < 1) {
+                        animFrameId = requestAnimationFrame(step);
+                    } else {
+                        animFrameId = null;
+                    }
+                }
+                animFrameId = requestAnimationFrame(step);
+            }
+
+            function fitFullState(smooth) {
+                const vw = viewport.clientWidth || window.innerWidth - 360 || 900;
+                const vh = viewport.clientHeight || window.innerHeight || 700;
+                const targetScale = Math.max(minScale, Math.min(vw / worldW, vh / worldH) * 0.98);
+                const targetTx = (vw - worldW * targetScale) / 2;
+                const targetTy = (vh - worldH * targetScale) / 2;
+
+                if (smooth) {
+                    animateCamera(targetTx, targetTy, targetScale, 420);
+                } else {
+                    cancelAnim();
+                    scale = targetScale;
+                    tx = targetTx;
+                    ty = targetTy;
+                    requestRender();
+                }
+            }
+
+            function flyTo(y, x, zoomMult) {
+                const vw = viewport.clientWidth || 900;
+                const vh = viewport.clientHeight || 700;
+                const fit = Math.min(vw / worldW, vh / worldH);
+                const desired = fit * (zoomMult || 2.5);
+                const idealScale = Math.min(maxScale, Math.max(scale, desired));
+                const [wx, wy] = toWorldPx(y, x);
+                const targetTx = vw / 2 - wx * idealScale;
+                const targetTy = vh * 0.62 - wy * idealScale;
+                animateCamera(targetTx, targetTy, idealScale, 480);
+            }
+
+            function zoomAt(clientX, clientY, factor) {
+                cancelAnim();
+                const rect = viewport.getBoundingClientRect();
+                const mx = clientX - rect.left;
+                const my = clientY - rect.top;
+                const wx = (mx - tx) / scale;
+                const wy = (my - ty) / scale;
+                const nextScale = Math.max(minScale, Math.min(maxScale, scale * factor));
+                tx = mx - wx * nextScale;
+                ty = my - wy * nextScale;
+                scale = nextScale;
+                requestRender();
+            }
+
+            function openPopupAt(y, x, htmlContent) {
+                popupCoords = [y, x];
+                popupBody.innerHTML = htmlContent;
+                popupEl.classList.add("visible");
+                requestRender();
+            }
+
+            function closePopup() {
+                popupCoords = null;
+                openPinId = null;
+                popupEl.classList.remove("visible");
+                popupBody.innerHTML = "";
+            }
+
+            // =========================================================================
+            // 4. DYMKI: OFICJALNE PINEZKI + KREATOR WŁASNYCH PINEZEK GRACZA
+            // =========================================================================
+            function openCreateCustomPinPopup(gy, gx) {
+                let selectedColor = "#00e5ff";
+                const colors = ["#00e5ff", "#ff2a85", "#ffb800", "#00ff9d"];
+
+                openPinId = null;
+                openPopupAt(gy, gx, `
+          <span class="cat-tag" style="background:#00e5ff; font-size:10px; font-weight:800;">${CUSTOM_PIN_ICON}NEW PERSONAL PIN</span>
+          <div class="popup-title">Save Your Own Spot</div>
+          <div class="custom-form">
+            <input type="text" id="customTitleInput" class="custom-input" placeholder="Spot name (e.g. Secret Garage)" maxlength="55" />
+            <textarea id="customNoteInput" class="custom-textarea" placeholder="Short note (optional)..." maxlength="180"></textarea>
+            <div class="color-row">
+              <span>Color:</span>
+              ${colors.map((c, idx) => `<button type="button" class="color-swatch ${idx === 0 ? "selected" : ""}" data-color="${c}" style="background:${c};"></button>`).join("")}
+            </div>
+            <button type="button" class="popup-btn" id="saveCustomPinBtn">💾 Save Pin [${gy}, ${gx}]</button>
+          </div>
+        `);
+
+                const titleInput = document.getElementById("customTitleInput");
+                const noteInput = document.getElementById("customNoteInput");
+                if (titleInput) titleInput.focus();
+
+                popupBody.querySelectorAll(".color-swatch").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        popupBody.querySelectorAll(".color-swatch").forEach(b => b.classList.remove("selected"));
+                        btn.classList.add("selected");
+                        selectedColor = btn.dataset.color;
+                    });
+                });
+
+                document.getElementById("saveCustomPinBtn").addEventListener("click", () => {
+                    const title = (titleInput.value || "").trim() || `My Spot (${gy}, ${gx})`;
+                    const note = (noteInput.value || "").trim() || "Personal marker saved in your browser.";
+
+                    const newPin = {
+                        id: "custom_" + Date.now(),
+                        title,
+                        category: "custom",
+                        coords: [gy, gx],
+                        color: selectedColor,
+                        isCustom: true,
+                        description: note,
+                        author: "You"
+                    };
+
+                    customPins.push(newPin);
+                    saveCustomPins();
+                    if (addPinMode) setAddPinMode(false);
+                    renderFilterButtons();
+                    renderAll();
+                    openPinPopup(newPin);
+                });
+            }
+
+            function openPinPopup(pin) {
+                if (pin.isCustom) {
+                    openPinId = pin.id;
+                    const col = pin.color || "#00e5ff";
+                    openPopupAt(pin.coords[0], pin.coords[1], `
+            <span class="cat-tag" style="background:${col}; font-size:10px; font-weight:800;">${CUSTOM_PIN_ICON}My Pin</span>
+            <span style="font-size:11px; color:#939bb8; margin-left:6px;">[${pin.coords[0]}, ${pin.coords[1]}]</span>
+            <div class="popup-title">${escapeHtml(pin.title)}</div>
+            <div class="popup-desc">${escapeHtml(pin.description)}</div>
+            <button type="button" class="popup-btn danger" id="deleteCustomPinBtn">🗑️ Delete Pin</button>
+          `);
+                    document.getElementById("deleteCustomPinBtn").addEventListener("click", () => {
+                        customPins = customPins.filter(p => p.id !== pin.id);
+                        saveCustomPins();
+                        if (activeCategory === "custom" && customPins.length === 0) {
+                            activeCategory = "all";
+                        }
+                        closePopup();
+                        renderFilterButtons();
+                        renderAll();
+                    });
+                    return;
+                }
+
+                const meta = CATEGORY_META[pin.category] || CATEGORY_META.secrets;
+                const ytId = extractYouTubeId(pin.clipUrl);
+                const isFound = foundIds.has(String(pin.id));
+                openPinId = pin.id;
+                const pinTag = formatPinTag(pin.id);
+
+                const mediaBlock = ytId ? `
+          <div class="popup-media-wrap" id="popupMediaBox" title="Click to play video directly on the map">
+            <img src="https://i.ytimg.com/vi/${ytId}/hqdefault.jpg" alt="${escapeHtml(pin.title)}" />
+            <div class="popup-play-badge">
+              <div class="popup-play-circle">▶</div>
+              <span class="popup-play-hint">Play in Map</span>
+            </div>
+          </div>
+        ` : "";
+
+                const html = `
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            ${pinTag ? `<span class="pin-id-chip">${pinTag}</span>` : ""}
+            <span class="cat-tag" style="background:${meta.color}; font-size:10px; font-weight:800;">${meta.icon}${meta.label}</span>
+            ${pin.isNew ? `<span class="new-chip">🔥 NEW</span>` : ""}
+            <span style="font-size:11px; color:#939bb8;">by ${escapeHtml(pin.author)}</span>
+          </div>
+          <div class="popup-title">${escapeHtml(pin.title)}</div>
+          ${mediaBlock}
+          <div class="popup-desc">${escapeHtml(pin.description)}</div>
+          <a class="popup-btn" href="${pin.clipUrl}" target="_blank" rel="noopener noreferrer">▶ Watch on YouTube</a>
+          <div class="popup-actions-row">
+            <button class="popup-sub-btn ${isFound ? "is-found-btn" : ""}" id="toggleFoundBtn">
+              ${isFound ? "✅ Found" : "✓ Mark Found"}
+            </button>
+            <button class="popup-sub-btn" id="sharePinBtn">🔗 Share Pin</button>
+          </div>
+        `;
+
+                openPopupAt(pin.coords[0], pin.coords[1], html);
+
+                const mediaBox = document.getElementById("popupMediaBox");
+                if (mediaBox && ytId) {
+                    mediaBox.addEventListener("click", () => {
+                        mediaBox.innerHTML = `
+              <iframe
+                src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0"
+                title="${escapeHtml(pin.title)}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+              </iframe>
+            `;
+                    }, { once: true });
+                }
+
+                const toggleFoundBtn = document.getElementById("toggleFoundBtn");
+                if (toggleFoundBtn) {
+                    toggleFoundBtn.addEventListener("click", () => {
+                        const key = String(pin.id);
+                        if (foundIds.has(key)) foundIds.delete(key);
+                        else foundIds.add(key);
+                        saveFoundIds();
+                        const nowFound = foundIds.has(key);
+                        toggleFoundBtn.textContent = nowFound ? "✅ Found" : "✓ Mark Found";
+                        toggleFoundBtn.classList.toggle("is-found-btn", nowFound);
+                        renderAll();
+                        if (hideFound && nowFound) closePopup();
+                    });
+                }
+
+                const shareBtn = document.getElementById("sharePinBtn");
+                if (shareBtn) {
+                    shareBtn.addEventListener("click", () => {
+                        const shareUrl = buildPinShareUrl(pin.id);
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            navigator.clipboard.writeText(shareUrl).then(() => {
+                                shareBtn.textContent = "✅ Link Copied!";
+                                setTimeout(() => { shareBtn.textContent = "🔗 Share Pin"; }, 1800);
+                            }).catch(() => window.prompt("Copy pin link:", shareUrl));
+                        } else {
+                            window.prompt("Copy pin link:", shareUrl);
+                        }
+                    });
+                }
+            }
+
+            viewport.addEventListener("contextmenu", e => {
+                if (e.target.closest(".map-popup, .zoom-controls, .map-toolbar, .quick-jump-bar, .routes-legend")) return;
+                e.preventDefault();
+                const rect = viewport.getBoundingClientRect();
+                const wx = (e.clientX - rect.left - tx) / scale;
+                const wy = (e.clientY - rect.top - ty) / scale;
+                const gx = Math.max(0, Math.min(1000, Math.round((wx / worldW) * 1000)));
+                const gy = Math.max(0, Math.min(1000, Math.round(1000 - (wy / worldH) * 1000)));
+                openCreateCustomPinPopup(gy, gx);
+            });
+
+            viewport.addEventListener("pointerdown", e => {
+                if (e.button === 2) return;
+                if (e.target.closest(".map-popup, .zoom-controls, .map-toolbar, .quick-jump-bar, .routes-legend, .marker-dot, .cluster-dot")) return;
+                cancelAnim();
+                viewport.setPointerCapture(e.pointerId);
+                activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+                if (activePointers.size === 1) {
+                    isDragging = true;
+                    moved = false;
+                    dragStartX = e.clientX;
+                    dragStartY = e.clientY;
+                    dragStartTx = tx;
+                    dragStartTy = ty;
+                } else if (activePointers.size === 2) {
+                    isDragging = false;
+                    moved = true;
+                    const pts = Array.from(activePointers.values());
+                    pinchStartDist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y) || 1;
+                    pinchStartScale = scale;
+                }
+            });
+
+            viewport.addEventListener("pointermove", e => {
+                const rect = viewport.getBoundingClientRect();
+                const wx = (e.clientX - rect.left - tx) / scale;
+                const wy = (e.clientY - rect.top - ty) / scale;
+                lastGridX = Math.max(0, Math.min(1000, Math.round((wx / worldW) * 1000)));
+                lastGridY = Math.max(0, Math.min(1000, Math.round(1000 - (wy / worldH) * 1000)));
+                coordsHud.textContent = `Y ${lastGridY} | X ${lastGridX} | ${Math.round(scale * 100)}%`;
+
+                if (!activePointers.has(e.pointerId)) return;
+                activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+                if (activePointers.size === 2) {
+                    const pts = Array.from(activePointers.values());
+                    const dist = Math.hypot(pts[1].x - pts[0].x, pts[1].y - pts[0].y);
+                    const midX = (pts[0].x + pts[1].x) / 2;
+                    const midY = (pts[0].y + pts[1].y) / 2;
+                    const desiredScale = Math.max(minScale, Math.min(maxScale, pinchStartScale * (dist / pinchStartDist)));
+                    const factor = desiredScale / scale;
+                    if (Math.abs(factor - 1) > 0.002) zoomAt(midX, midY, factor);
+                    return;
+                }
+
+                if (!isDragging) return;
+                const dx = e.clientX - dragStartX;
+                const dy = e.clientY - dragStartY;
+                if (Math.hypot(dx, dy) > 4) moved = true;
+                tx = dragStartTx + dx;
+                ty = dragStartTy + dy;
+                requestRender();
+            });
+
+            function handlePointerEnd(e) {
+                const wasSingleClick = isDragging && !moved && activePointers.size === 1;
+                activePointers.delete(e.pointerId);
+                if (activePointers.size === 0) isDragging = false;
+
+                if (wasSingleClick) {
+                    const rect = viewport.getBoundingClientRect();
+                    const wx = (e.clientX - rect.left - tx) / scale;
+                    const wy = (e.clientY - rect.top - ty) / scale;
+                    const gx = Math.max(0, Math.min(1000, Math.round((wx / worldW) * 1000)));
+                    const gy = Math.max(0, Math.min(1000, Math.round(1000 - (wy / worldH) * 1000)));
+
+                    if (addPinMode) {
+                        openCreateCustomPinPopup(gy, gx);
+                    } else if (coordMode) {
+                        const coordLine = `[${gy}, ${gx}]`;
+                        openPinId = null;
+                        openPopupAt(gy, gx, `
+              <div style="font-size:12px;">
+                <div style="color:#939bb8; margin-bottom:6px;">Wklej do <b>pins.js</b> (pole <code>coords</code>):</div>
+                <code style="display:block; color:#00e5ff; font-size:15px; font-weight:800; margin-bottom:10px;">${coordLine}</code>
+                <button class="popup-btn" id="copyCoordBtn">📋 Copy ${coordLine}</button>
+              </div>
+            `);
+                        const copyBtn = document.getElementById("copyCoordBtn");
+                        if (copyBtn) {
+                            copyBtn.addEventListener("click", () => {
+                                navigator.clipboard.writeText(coordLine);
+                                copyBtn.textContent = "✅ Skopiowano!";
+                            });
+                        }
+                    } else {
+                        closePopup();
+                    }
+                }
+            }
+
+            viewport.addEventListener("pointerup", handlePointerEnd);
+            viewport.addEventListener("pointercancel", handlePointerEnd);
+
+            viewport.addEventListener("wheel", e => {
+                e.preventDefault();
+                const factor = e.deltaY < 0 ? 1.18 : 1 / 1.18;
+                zoomAt(e.clientX, e.clientY, factor);
+            }, { passive: false });
+
+            // =========================================================================
+            // 5. LISTA BOCZNA, WYSZUKIWANIE PO #ID I PASEK POSTĘPU
+            // =========================================================================
+            function updateProgressBar() {
+                const officialPins = getOfficialPins();
+                const total = officialPins.length;
+                const foundCount = officialPins.filter(p => foundIds.has(String(p.id))).length;
+                const pct = total > 0 ? Math.round((foundCount / total) * 100) : 0;
+                document.getElementById("foundCountText").textContent = `${foundCount} / ${total} (${pct}%)`;
+                document.getElementById("progressFill").style.width = `${pct}%`;
+            }
+
+            function matchesSearch(pin, rawQuery) {
+                const q = rawQuery.trim().toLowerCase();
+                if (!q) return true;
+
+                // Obsługa: "22", "#22", "022", "pin 22", "pin #22"
+                const numMatch = q.match(/^(?:pin\s*)?#?0*(\d+)$/);
+                if (numMatch) {
+                    const targetId = numMatch[1];
+                    if (String(pin.id) === targetId) return true;
+                }
+
+                const idStr = pin.isCustom ? "" : `${pin.id} #${pin.id} #${String(pin.id).padStart(2, "0")} #${String(pin.id).padStart(3, "0")} pin ${pin.id}`;
+                const text = `${idStr} ${pin.title} ${pin.description} ${pin.author} ${pin.category}`.toLowerCase();
+                return text.includes(q);
+            }
+
+            function renderAll() {
+                updateProgressBar();
+                const allPins = getAllPins();
+
+                const listEl = document.getElementById("pinList");
+                listEl.innerHTML = "";
+
+                filteredPins = allPins.filter(pin => {
+                    const matchCat = activeCategory === "all" || pin.category === activeCategory;
+                    const isFound = !pin.isCustom && foundIds.has(String(pin.id));
+                    if (hideFound && isFound) return false;
+                    return matchCat && matchesSearch(pin, searchQuery);
+                });
+
+                document.getElementById("pinCounter").textContent = `● ${filteredPins.length} PINS`;
+
+                filteredPins.forEach(pin => {
+                    const meta = CATEGORY_META[pin.category] || CATEGORY_META.secrets;
+                    const pinColor = pin.isCustom ? (pin.color || "#00e5ff") : meta.color;
+                    const isFound = !pin.isCustom && foundIds.has(String(pin.id));
+                    const pinTag = pin.isCustom ? "" : formatPinTag(pin.id);
+
+                    const card = document.createElement("div");
+                    card.className = "pin-card" + (isFound ? " is-found" : "");
+                    card.innerHTML = `
+            <div class="pin-meta">
+              <div class="pin-meta-left">
+                ${pinTag ? `<span class="pin-id-chip">${pinTag}</span>` : ""}
+                <span class="cat-tag" style="background:${pinColor};">${meta.icon}${meta.label}</span>
+                ${pin.isNew ? `<span class="new-chip">🔥 NEW</span>` : ""}
+                ${isFound ? `<span class="found-chip">✓ FOUND</span>` : ""}
+              </div>
+              <span style="color:var(--text-muted);">${escapeHtml(pin.author)}</span>
+            </div>
+            <h4>${escapeHtml(pin.title)}</h4>
+            <p>${escapeHtml(pin.description)}</p>
+          `;
+                    card.addEventListener("click", () => {
+                        flyTo(pin.coords[0], pin.coords[1], 2.6);
+                        openPinPopup(pin);
+                        document.getElementById("sidebar").classList.remove("open");
+                    });
+                    listEl.appendChild(card);
+                });
+
+                requestRender();
+            }
+
+            function renderDeals() {
+                const submitBtn = document.getElementById("submitSpotBtn");
+                if (SUBMIT_SPOT_URL) {
+                    submitBtn.href = SUBMIT_SPOT_URL;
+                    submitBtn.classList.add("visible");
+                }
+
+                const dealsSource = (Array.isArray(window.AFFILIATE_DEALS) && window.AFFILIATE_DEALS.length)
+                    ? window.AFFILIATE_DEALS
+                    : FALLBACK_DEALS;
+                const container = document.getElementById("dealsContainer");
+                container.innerHTML = "";
+                dealsSource.forEach(deal => {
+                    const a = document.createElement("a");
+                    a.className = "deal-item";
+                    a.href = deal.url;
+                    a.target = "_blank";
+                    a.rel = "noopener noreferrer";
+                    a.innerHTML = `
+            <div class="deal-top">
+              <span class="deal-badge">${deal.badge}</span>
+              <span class="deal-cta">${deal.priceTag}</span>
+            </div>
+            <div class="deal-title">${deal.title}</div>
+            <div class="deal-sub">${deal.subtitle}</div>
+          `;
+                    container.appendChild(a);
+                });
+            }
+
+            const routesBtn = document.getElementById("routesBtn");
+            const routesLegend = document.getElementById("routesLegend");
+            routesBtn.addEventListener("click", () => {
+                showRoutes = !showRoutes;
+                routesBtn.classList.toggle("active", showRoutes);
+                routesBtn.textContent = showRoutes ? "🛣️ Routes: ON" : "🛣️ Routes: OFF";
+                routesLegend.classList.toggle("visible", showRoutes);
+                requestRender();
+            });
+
+            const addPinBtn = document.getElementById("addPinBtn");
+            const coordBtn = document.getElementById("coordModeBtn");
+
+            function setAddPinMode(state) {
+                addPinMode = state;
+                addPinBtn.classList.toggle("active", addPinMode);
+                addPinBtn.textContent = addPinMode ? "📌 Click Map..." : "📌 Add Pin";
+                viewport.classList.toggle("add-pin-cursor", addPinMode);
+                if (addPinMode && coordMode) {
+                    coordMode = false;
+                    coordBtn.classList.remove("active");
+                    coordBtn.textContent = "📍 Coords: OFF";
+                }
+            }
+
+            addPinBtn.addEventListener("click", () => setAddPinMode(!addPinMode));
+
+            coordBtn.addEventListener("click", () => {
+                coordMode = !coordMode;
+                coordBtn.classList.toggle("active", coordMode);
+                coordBtn.textContent = coordMode ? "📍 Coords: ON" : "📍 Coords: OFF";
+                if (coordMode && addPinMode) setAddPinMode(false);
+            });
+
+            const mapFileInput = document.getElementById("mapFileInput");
+            document.getElementById("loadImgBtn").addEventListener("click", () => mapFileInput.click());
+            mapFileInput.addEventListener("change", e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const objUrl = URL.createObjectURL(file);
+                activateOfficialMapImage(objUrl, file.name);
+            });
+
+            document.getElementById("popupClose").addEventListener("click", closePopup);
+            document.getElementById("resetViewBtn").addEventListener("click", () => fitFullState(true));
+            document.getElementById("zoomInBtn").addEventListener("click", () => {
+                const r = viewport.getBoundingClientRect();
+                zoomAt(r.left + r.width / 2, r.top + r.height / 2, 1.35);
+            });
+            document.getElementById("zoomOutBtn").addEventListener("click", () => {
+                const r = viewport.getBoundingClientRect();
+                zoomAt(r.left + r.width / 2, r.top + r.height / 2, 1 / 1.35);
+            });
+
+            document.getElementById("quickJumpBar").addEventListener("click", e => {
+                const btn = e.target.closest(".jump-btn");
+                if (!btn) return;
+                closePopup();
+                flyTo(Number(btn.dataset.y), Number(btn.dataset.x), 2.4);
+            });
+
+            const hideFoundBtn = document.getElementById("hideFoundBtn");
+            hideFoundBtn.addEventListener("click", () => {
+                hideFound = !hideFound;
+                hideFoundBtn.classList.toggle("active", hideFound);
+                hideFoundBtn.textContent = hideFound ? "👁 Show Found" : "👁 Hide Found";
+                if (hideFound && openPinId !== null && foundIds.has(String(openPinId))) {
+                    closePopup();
+                }
+                renderAll();
+            });
+
+            document.getElementById("filterContainer").addEventListener("click", e => {
+                const btn = e.target.closest(".filter-btn");
+                if (!btn) return;
+                activeCategory = btn.dataset.cat;
+                renderFilterButtons();
+                closePopup();
+                renderAll();
+            });
+
+            const searchInput = document.getElementById("searchInput");
+            searchInput.addEventListener("input", e => {
+                searchQuery = e.target.value;
+                renderAll();
+            });
+
+            // Enter w wyszukiwarce od razu przenosi na pierwszą znalezioną pinezkę
+            searchInput.addEventListener("keydown", e => {
+                if (e.key === "Enter" && filteredPins.length > 0) {
+                    e.preventDefault();
+                    const firstPin = filteredPins[0];
+                    flyTo(firstPin.coords[0], firstPin.coords[1], 2.7);
+                    openPinPopup(firstPin);
+                    document.getElementById("sidebar").classList.remove("open");
+                    searchInput.blur();
+                }
+            });
+
+            document.getElementById("mobileToggle").addEventListener("click", () => {
+                document.getElementById("sidebar").classList.toggle("open");
+            });
+
+            window.addEventListener("resize", () => {
+                resizeCanvas();
+                fitFullState(false);
+            });
+
+            function boot() {
+                renderFilterButtons();
+                renderRoutesLegend();
+                resizeCanvas();
+                renderAll();
+                renderDeals();
+                tryAutoDetectLocalMap(0);
+            }
+
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", boot);
+            } else {
+                boot();
+            }
+        })();
+    </script>
+</body>
+
+</html>
