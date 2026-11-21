@@ -219,7 +219,7 @@ window.LEONIDA_PINS = [
     "coords": [489, 809],
     "isNew": false,
     "description": "Classic Vice City nod and early-game secret encounter for returning players.",
-    "clipUrl": "https://www.youtube.com/watch?v=TPF8W1_mk7I",
+    "clipUrl": "https://youtube.com/shorts/4AsRmsbn1g0",
     "author": "LunarGaming"
   },
   {
