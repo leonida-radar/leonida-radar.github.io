@@ -339,7 +339,7 @@ window.LEONIDA_PINS = [
     "coords": [245, 460],
     "isNew": true,
     "description": "Mysterious Bigfoot sighting deep in the Leonida wetlands that kicks off the hidden Skunkape side-mission chain.",
-    "clipUrl": "https://www.youtube.com/watch?v=uB2EbXxiK3w",
+    "clipUrl": "https://youtube.com/shorts/aXjDoJWwAzM",
     "author": "Generalkidd"
   },
   {
