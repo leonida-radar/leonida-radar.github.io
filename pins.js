@@ -329,7 +329,7 @@ window.LEONIDA_PINS = [
     "coords": [542, 874],
     "isNew": true,
     "description": "Waterfront apartment complex near the Top Fun Drones shop paying tribute to TV's iconic Miami forensics vigilante.",
-    "clipUrl": "https://youtube.com/shorts/C6Eo48Mr6co",
+    "clipUrl": "https://www.youtube.com/watch?v=PcAvVvbVDyw",
     "author": "StancraftYT"
   },
   {
@@ -339,7 +339,7 @@ window.LEONIDA_PINS = [
     "coords": [245, 460],
     "isNew": true,
     "description": "Mysterious Bigfoot sighting deep in the Leonida wetlands that kicks off the hidden Skunkape side-mission chain.",
-    "clipUrl": "https://youtube.com/shorts/aXjDoJWwAzM",
+    "clipUrl": "https://www.youtube.com/watch?v=uB2EbXxiK3w",
     "author": "Generalkidd"
   },
   {
@@ -501,6 +501,26 @@ window.LEONIDA_PINS = [
     "description": "Neon-lit highway interchange hosting high-stakes midnight street races and fast early-game cash runs.",
     "clipUrl": "https://www.youtube.com/watch?v=5W8bPg1Mbvw",
     "author": "Community Clip"
+  },
+  {
+    "id": 51,
+    "title": "Vice Port Docks — Dexter & Sgt. Doakes Boat Spot",
+    "category": "easter_eggs",
+    "coords": [438, 788],
+    "isNew": true,
+    "description": "Hidden waterfront dock and boat spot referencing the legendary scene where Sergeant Doakes catches Dexter Morgan red-handed.",
+    "clipUrl": "WKLEJ_LINK_DO_KLIPU_51",
+    "author": "Community Clip"
+  },
+  {
+    "id": 52,
+    "title": "Vice Beach — Brian Moser (Ice Truck Killer) Reference",
+    "category": "easter_eggs",
+    "coords": [142, 560],
+    "isNew": true,
+    "description": "Dark hidden tribute to Dexter's brother Brian Moser, paying homage to the infamous Ice Truck Killer storyline.",
+    "clipUrl": "WKLEJ_LINK_DO_KLIPU_52",
+    "author": "Community Clip"
   }
 ];
 
@@ -520,4 +540,3 @@ window.AFFILIATE_DEALS = [
     "url": "https://www.eneba.com/"
   }
 ];
-
