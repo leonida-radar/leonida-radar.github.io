@@ -329,7 +329,7 @@ window.LEONIDA_PINS = [
     "coords": [542, 874],
     "isNew": true,
     "description": "Waterfront apartment complex near the Top Fun Drones shop paying tribute to TV's iconic Miami forensics vigilante.",
-    "clipUrl": "https://www.youtube.com/watch?v=PcAvVvbVDyw",
+    "clipUrl": "https://youtube.com/shorts/C6Eo48Mr6co",
     "author": "StancraftYT"
   },
   {
@@ -520,3 +520,4 @@ window.AFFILIATE_DEALS = [
     "url": "https://www.eneba.com/"
   }
 ];
+
